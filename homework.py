@@ -39,8 +39,6 @@ class Training:
         self.duration = duration  # длительность тренировки
         self.weight = weight  # вес спортсмена
 
-        pass
-
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
         return self.action * self.LEN_STEP / self.M_IN_KM
@@ -69,8 +67,10 @@ class Running(Training):
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        return ((self.RUN_COEFF_CAL_1 * self.get_mean_speed() - self.RUN_COEFF_CAL_2)
-                * self.weight / self.M_IN_KM * self.duration * self.MINUTES_IN_HOUR)
+        return ((self.RUN_COEFF_CAL_1 * self.get_mean_speed()
+                 - self.RUN_COEFF_CAL_2)
+                * self.weight / self.M_IN_KM
+                * self.duration * self.MINUTES_IN_HOUR)
 
 
 class SportsWalking(Training):
@@ -91,8 +91,9 @@ class SportsWalking(Training):
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
         return ((self.WLK_COEFF_CAL_1 * self.weight
-                 + (self.get_mean_speed() ** self.WLK_COEFF_CAL_2 // self.height)
-                 * self.WLK_COEFF_CAL_3 * self.weight) * self.duration * self.MINUTES_IN_HOUR)
+                 + (self.get_mean_speed() ** self.WLK_COEFF_CAL_2
+                    // self.height) * self.WLK_COEFF_CAL_3 * self.weight)
+                * self.duration * self.MINUTES_IN_HOUR)
 
 
 class Swimming(Training):
@@ -125,9 +126,9 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    workout_types: dict[str, Type[Training]] = {'SWM': Swimming,
-                                                'RUN': Running,
-                                                'WLK': SportsWalking}
+    workout_types: dict[str, Type[Training]] = {SWM: Swimming,
+                                                RUN: Running,
+                                                WLK: SportsWalking}
     if workout_type in workout_types:
         return workout_types[workout_type](*data)
     raise ValueError('Тип тренировки не предусмотрен')
