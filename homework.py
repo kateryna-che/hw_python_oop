@@ -1,5 +1,4 @@
 from dataclasses import dataclass, asdict
-from typing import Type
 
 SWM: str = 'SWM'
 RUN: str = 'RUN'
@@ -126,9 +125,9 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    workout_types: dict[str, Type[Training]] = {'SWM': Swimming,
-                                                'RUN': Running,
-                                                'WLK': SportsWalking}
+    workout_types = {'SWM': Swimming,
+                     'RUN': Running,
+                     'WLK': SportsWalking}
     if workout_type in workout_types:
         return workout_types[workout_type](*data)
     raise ValueError('Тип тренировки не предусмотрен')
