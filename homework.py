@@ -1,12 +1,12 @@
-from dataclasses import asdict, dataclass
-from typing import ClassVar, Dict, List, Type
+from dataclasses import dataclass, asdict
+from typing import Type, List
 
 SWM: str = 'SWM'
 RUN: str = 'RUN'
 WLK: str = 'WLK'
 
 
-@dataclass
+@dataclass(frozen=True)
 class InfoMessage:
     """Информационное сообщение о тренировке."""
     training_type: str
@@ -14,11 +14,11 @@ class InfoMessage:
     distance: float
     speed: float
     calories: float
-    TEXT: ClassVar[str] = ('Тип тренировки: {training_type}; '
-                           'Длительность: {duration:.3f} ч.; '
-                           'Дистанция: {distance:.3f} км; '
-                           'Ср. скорость: {speed:.3f} км/ч; '
-                           'Потрачено ккал: {calories:.3f}.')
+    TEXT: str = ('Тип тренировки: {training_type}; '
+                 'Длительность: {duration:.3f} ч.; '
+                 'Дистанция: {distance:.3f} км; '
+                 'Ср. скорость: {speed:.3f} км/ч; '
+                 'Потрачено ккал: {calories:.3f}.')
 
     def get_message(self) -> str:
         return self.TEXT.format(**asdict(self))
@@ -35,9 +35,9 @@ class Training:
                  duration: float,
                  weight: float,
                  ) -> None:
-        self.action = action
-        self.duration = duration
-        self.weight = weight
+        self.action = action  # количество совершённых действий
+        self.duration = duration  # длительность тренировки
+        self.weight = weight  # вес спортсмена
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
@@ -126,9 +126,9 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: List[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    workout_types: Dict[str, Type[Training]] = {SWM: Swimming,
-                                                RUN: Running,
-                                                WLK: SportsWalking}
+    workout_types: dict[str, Type[Training]] = {'SWM': Swimming,
+                                                'RUN': Running,
+                                                'WLK': SportsWalking}
     if workout_type in workout_types:
         return workout_types[workout_type](*data)
     raise ValueError('Тип тренировки не предусмотрен')
